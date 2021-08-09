@@ -14,6 +14,7 @@ ccancer <- data.frame(time = c(1,5,6,6,9,10,10,10,12,12,12,12,12,13,15,16,20,24,
 #' Test for comparing survival proportions at fixed time.
 #' 
 #' @param t Fixed time to compare at
+#' @param conf.level Confidence level of the returned confidence interval
 #' @return List with statistics.
 #' \itemize{
 #'   \item d - Survival proportion difference.
@@ -21,7 +22,7 @@ ccancer <- data.frame(time = c(1,5,6,6,9,10,10,10,12,12,12,12,12,13,15,16,20,24,
 #'   \item se - Standard error of survival difference.
 #'   \item z - z-score.
 #'   \item pval - p-value based on z-score.
-#'   \item ci - 95% confidence interval for difference in survival proportion.
+#'   \item ci - confidence interval for difference in survival proportion.
 #' }
 #' 
 #' @examples
@@ -30,7 +31,9 @@ ccancer <- data.frame(time = c(1,5,6,6,9,10,10,10,12,12,12,12,12,13,15,16,20,24,
 #' 
 #' @references
 #' \cite{Machin D, Gardner MJ. Calculating confidence intervals for survival time analyses. Br Med J 1988; 296:1369-1371}
-machin_test <- function(fit, t) {
+machin_test <- function(fit, t, conf.level = .95) {
+  conf.alpha <- 1 - conf.level
+
   times <- sort(unique(c(fit$time, t)))
   res <- summary(fit, time = times)
   surv <- res$surv[times == t]
@@ -40,7 +43,7 @@ machin_test <- function(fit, t) {
   d <- diff(surv)
   e <- (n.risk - n.event) / surv
   se <- sqrt(sum(surv * (1 - surv) / e))
-  ci <- c(d + qnorm(.05/2) * se, d + qnorm(1 - .05/2) * se)
+  ci <- c(d + qnorm(conf.alpha / 2) * se, d + qnorm(1 - conf.alpha / 2) * se)
   z <- d / se
   pval <- (1 - pnorm(abs(z))) * 2
   list(d = d, e = e, se = se, z = z, pval = pval, ci = ci)
