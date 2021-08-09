@@ -13,8 +13,9 @@ ccancer <- data.frame(time = c(1,5,6,6,9,10,10,10,12,12,12,12,12,13,15,16,20,24,
 
 #' Test for comparing survival proportions at fixed time.
 #' 
-#' @param t Fixed time to compare at
-#' @param conf.level Confidence level of the returned confidence interval
+#' @param t Fixed time to compare at.
+#' @param alternative A character string specifying the alternative hypothesis.
+#' @param conf.level Confidence level of the returned confidence interval.
 #' @return List with statistics.
 #' \itemize{
 #'   \item d - Survival proportion difference.
@@ -31,7 +32,8 @@ ccancer <- data.frame(time = c(1,5,6,6,9,10,10,10,12,12,12,12,12,13,15,16,20,24,
 #' 
 #' @references
 #' \cite{Machin D, Gardner MJ. Calculating confidence intervals for survival time analyses. Br Med J 1988; 296:1369-1371}
-machin_test <- function(fit, t, conf.level = .95) {
+machin_test <- function(fit, t, alternative = c("two.sided", "less", "greater"), conf.level = .95) {
+  alternative <- match.arg(alternative)
   conf.alpha <- 1 - conf.level
 
   times <- sort(unique(c(fit$time, t)))
@@ -45,6 +47,10 @@ machin_test <- function(fit, t, conf.level = .95) {
   se <- sqrt(sum(surv * (1 - surv) / e))
   ci <- c(d + qnorm(conf.alpha / 2) * se, d + qnorm(1 - conf.alpha / 2) * se)
   z <- d / se
-  pval <- (1 - pnorm(abs(z))) * 2
+  if (alternative == "two.sided") {
+    pval <- (1 - pnorm(abs(z))) * 2
+  } else {
+    pval <- pnorm(z, lower.tail = (alternative == "less"))
+  }
   list(d = d, e = e, se = se, z = z, pval = pval, ci = ci)
 }
