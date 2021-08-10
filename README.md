@@ -1,5 +1,7 @@
 # Test for comparing survival proportions at fixed time
 
+$H_0: d = s_2 - s_1 = \mu$
+
 The test described in [Machin D, Gardner MJ. Calculating confidence intervals for survival time analyses. Br Med J 1988; 296:1369-1371](https://www.bmj.com/content/296/6633/1369).
 
 Also, consider [Klein JP, Logan B, Harhoff M, Andersen PK. Analyzing survival curves at a fixed point in time. Stat Med. 2007 Oct 30;26(24):4505-19. doi: 10.1002/sim.2864. PMID: 17348080](https://pubmed.ncbi.nlm.nih.gov/17348080/) for more information when such test is useful and better alternatives.
