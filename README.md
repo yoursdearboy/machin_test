@@ -24,7 +24,7 @@ library(survival)
 source("https://raw.githubusercontent.com/yoursdearboy/machin_test/main/machin_power.R")
 
 s1 <- 0.60 # Survival proportion in the 1st group.
-s2 <- 0.76 # Survival proportion in the 2nd group.
+s2 <- 0.77 # Survival proportion in the 2nd group.
 
 # Effective sample size at the fixed time in the 2nd group (num. still at risk / survival probability).
 e2 <- 117
@@ -43,8 +43,8 @@ nsim <- 1e4 # number of simulations
 mint <- 1 # min follow-up
 acct <- 3 # accrual time
 maxt <- mint + acct
-lambda1 <- 0.09 # hazard rate in the 1st group
-lambda2 <- 0.09 * 1.9 # hazard rate in the 2nd group (1.9 is hazard ratio)
+lambda1 <- 0.17 # hazard rate in the 1st group
+lambda2 <- 0.17 * 0.5 # hazard rate in the 2nd group (0.5 is hazard ratio)
 n <- 350 # sample size
 tt <- 3 # fixed time to test
 alpha <- 0.05
@@ -68,8 +68,8 @@ mean(sim) # power of the test
 library(survival)
 source("https://raw.githubusercontent.com/yoursdearboy/machin_test/main/machin_power.R")
 
-s1 <- 0.72 # Survival proportion in the 1st group.
-s2 <- 0.76 # Survival proportion in the 2nd group.
+s1 <- 0.60 # Survival proportion in the 1st group.
+s2 <- 0.57 # Survival proportion in the 2nd group.
 mu <- -0.1 # Non-inferiority margin.
 
 # Effective sample size at the fixed time in the 2nd group (num. still at risk / survival probability).
@@ -79,7 +79,7 @@ e2 <- 117
 n2 <- 350
 e2 <- n2 * (1 - punif(3, 1, 4))
 
-machin_power(s1 = s1, s2 = s2, e2 = e2, mu = -0.1, alternative = "one.sided", k = 1, sig.level = 0.05)
+machin_power(s1 = s1, s2 = s2, e2 = e2, mu = -0.1, alternative = "greater", k = 1, sig.level = 0.05)
 ```
 
 or using a simulation
@@ -89,8 +89,8 @@ nsim <- 1e4 # number of simulations
 mint <- 1 # min follow-up
 acct <- 3 # accrual time
 maxt <- mint + acct
-lambda1 <- 0.09 # hazard rate in the 1st group
-lambda2 <- 0.09 * 1.2 # hazard rate in the 2nd group (1.9 is hazard ratio)
+lambda1 <- 0.17 # hazard rate in the 1st group
+lambda2 <- 0.17 * 1.1 # hazard rate in the 2nd group (1.1 is hazard ratio)
 mu <- -0.1 # non-inferiority margin
 n <- 350 # sample size
 tt <- 3 # fixed time to test
@@ -105,10 +105,10 @@ sim <- replicate(nsim, {
   fit <- survfit(Surv(t, s) ~ gr)
 
   # using one-sided test
-  machin_test(fit, tt, mu = mu, alternative = "greater")$p <= alpha
+  # machin_test(fit, tt, mu = mu, alternative = "greater")$p <= alpha
 
   # using confidence interval
-  # machin_test(fit, tt, conf.level = 0.9)$ci[1] > mu
+  machin_test(fit, tt, conf.level = 0.9)$ci[1] > mu
 })
 
 mean(sim) # power of the test
