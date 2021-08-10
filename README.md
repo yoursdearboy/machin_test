@@ -1,6 +1,6 @@
 # Test for comparing survival proportions at fixed time
 
-$H_0: d = s_2 - s_1 = \mu$
+H0: d = s2 - s1 = u
 
 The test described in [Machin D, Gardner MJ. Calculating confidence intervals for survival time analyses. Br Med J 1988; 296:1369-1371](https://www.bmj.com/content/296/6633/1369).
 
